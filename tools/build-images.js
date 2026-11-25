@@ -23,20 +23,27 @@ async function run() {
   const meta = await sharp(SOURCE).metadata();
   console.log(`Source: ${meta.width}x${meta.height} ${meta.format}`);
 
+  // Never upscale: a variant can only be as large as the shortest source edge.
+  // Keep the srcset width descriptors in src/_includes/partials/hero-photo.njk
+  // in sync with the sizes logged below.
+  const maxSize = Math.min(meta.width, meta.height);
+  const size1x = Math.min(640, maxSize);
+  const size2x = Math.min(1280, maxSize);
+
   // Square crop, attention-weighted so the face stays centered.
   const square = (size) =>
     sharp(SOURCE)
       .rotate() // honour EXIF orientation
       .resize(size, size, { fit: "cover", position: sharp.strategy.attention });
 
-  await square(640).jpeg({ quality: 82, mozjpeg: true }).toFile(out("ben-woodruff.jpg"));
-  await square(1280).jpeg({ quality: 80, mozjpeg: true }).toFile(out("ben-woodruff@2x.jpg"));
-  await square(640).webp({ quality: 80 }).toFile(out("ben-woodruff.webp"));
-  await square(640).avif({ quality: 62 }).toFile(out("ben-woodruff.avif"));
-  await square(1280).webp({ quality: 78 }).toFile(out("ben-woodruff@2x.webp"));
-  await square(1280).avif({ quality: 60 }).toFile(out("ben-woodruff@2x.avif"));
+  await square(size1x).jpeg({ quality: 82, mozjpeg: true }).toFile(out("ben-woodruff.jpg"));
+  await square(size2x).jpeg({ quality: 80, mozjpeg: true }).toFile(out("ben-woodruff@2x.jpg"));
+  await square(size1x).webp({ quality: 80 }).toFile(out("ben-woodruff.webp"));
+  await square(size1x).avif({ quality: 62 }).toFile(out("ben-woodruff.avif"));
+  await square(size2x).webp({ quality: 78 }).toFile(out("ben-woodruff@2x.webp"));
+  await square(size2x).avif({ quality: 60 }).toFile(out("ben-woodruff@2x.avif"));
 
-  console.log("Headshot variants written.");
+  console.log(`Headshot variants written at ${size1x}w (1x) and ${size2x}w (2x).`);
 
   // --- Open Graph card: 1200x630, headshot right, text left -----------
   const W = 1200;
