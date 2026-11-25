@@ -4,13 +4,13 @@ shortTitle: "110+ Site Migration Without Losing Rankings"
 slug: enterprise-migration
 order: 1
 discipline: Technical & Enterprise SEO
-cardSummary: "Leading SEO strategy, information architecture, and redirect mapping as a large multi-location client portfolio moves off legacy custom themes."
+cardSummary: "Leading SEO strategy, information architecture, and redirect mapping as a large multi-location client portfolio moves off legacy custom themes — supported by a custom Python and JavaScript toolkit built for the job."
 headlineResult: "110+"
 headlineLabel: "client sites migrated"
-roleOnProject: "SEO lead for migration strategy, IA, and redirect governance"
-context: "Multi-location healthcare portfolio, Audigy, 2021–present"
+roleOnProject: "SEO lead for migration strategy, IA, redirect governance, and migration tooling"
+context: "Multi-location healthcare portfolio, Audigy, 2025–present"
 datePublished: 2026-01-15
-description: "Leading SEO strategy, information architecture, and regex redirect mapping for 110+ healthcare sites migrating to a modern WordPress framework."
+description: "SEO strategy, information architecture, regex redirect mapping, and custom Python and JavaScript tooling for a 110+ site healthcare WordPress migration."
 skills:
   - Information architecture
   - Regex redirect mapping
@@ -18,6 +18,12 @@ skills:
   - Indexation control
   - Structured data
   - Core Web Vitals
+  - Python
+  - WordPress REST API
+  - WordPress plugin development
+  - JavaScript bookmarklets
+  - Yoast SEO configuration
+  - AI-assisted development
   - Stakeholder communication
 ---
 
@@ -57,6 +63,13 @@ skills:
     <strong>Distributed stakeholders.</strong> Every site had a marketing
     manager and a practice owner who needed to understand what was changing and
     why, in terms that had nothing to do with crawl budget.
+  </li>
+  <li>
+    <strong>Tooling that stopped being supported mid-project.</strong> The
+    multisite network relied on the Broadcast plugin by Edward Plainview to push
+    content from a parent site to child sites. When the license for updates was
+    not renewed, several of the workflows the migration depended on had to be
+    replaced with something we owned and could maintain ourselves.
   </li>
 </ul>
 
@@ -99,6 +112,211 @@ skills:
   volatility.
 </p>
 
+<h2>The tooling I built to make it possible</h2>
+
+<p>
+  A migration at this scale is not limited by strategy &mdash; it is limited by
+  how many hours the team can spend moving content by hand without introducing
+  errors. Rather than absorb that cost, I built and tested a purpose-made
+  toolkit for the project: Python scripts that work through the WordPress REST
+  API, JavaScript bookmarklets for the tasks that live inside the WordPress
+  admin, a custom WordPress plugin, a reusable Yoast settings template, and a
+  set of AI assistants for recurring content work. I used AI as a development
+  partner to build and test these tools quickly, then validated every one of
+  them against real content before it touched a client site.
+</p>
+
+<p>
+  Each tool is documented in an internal library so anyone on the team can pick
+  it up without needing me in the room. That was a deliberate goal: tooling that
+  only its author can run is a bottleneck, not a benefit.
+</p>
+
+<h3>Python scripts for content migration and cleanup</h3>
+
+<ul>
+  <li>
+    <strong>Broadcast Content and MW to Web 2.0 Broadcast Tool.</strong> These
+    connect to a source and a destination WordPress site over the REST API and
+    carry a post across intact &mdash; title, body content, featured image, and
+    Yoast SEO metadata including the SEO title, meta description, and canonical.
+    They handle custom post types, support broadcasting a single post or every
+    post within a date range, and create the destination post as a draft so a
+    human reviews it before anything goes live. This directly replaced the
+    capability we lost when the Broadcast plugin stopped receiving updates.
+  </li>
+  <li>
+    <strong>Migrate Blogs.</strong> For legacy sites where the REST API was not
+    available on the source, this script reads a list of post URLs, scrapes the
+    title, article content, featured image, and Yoast metadata, uploads the
+    image to the new media library, and creates the post on the destination
+    site &mdash; logging every success and failure so nothing is silently lost.
+  </li>
+  <li>
+    <strong>Website Content Diff Checker.</strong> This one crawls a client site
+    and the template site it was built from, compares the content page by page,
+    and reports what is missing or out of sync. It caches the template crawl so
+    repeat runs are fast. This became our pre-launch quality gate: it catches the
+    page that quietly did not come across, which is exactly the failure mode that
+    costs a practice its rankings.
+  </li>
+  <li>
+    <strong>Fix Blog URLs.</strong> Checks a list of blog URLs for 404s and, when
+    it finds one, searches the site for the correct destination and writes the
+    old and new URL pair to a CSV. That CSV feeds the redirect map directly,
+    which turns the most tedious part of redirect work into a reviewable
+    artifact.
+  </li>
+  <li>
+    <strong>Update Blog Titles/Descriptions and Update Blog Tags.</strong> Bulk
+    updates driven by a reviewed CSV &mdash; titles and Yoast meta descriptions
+    in one, taxonomy tags in the other, with tags created automatically when they
+    do not yet exist. Both write a detailed log so every change is traceable.
+  </li>
+  <li>
+    <strong>Strip Empty Paragraphs, Deduplicate Topics, and Sync Blog Publish
+    Dates.</strong> Small utilities that handle the unglamorous cleanup work:
+    removing empty markup left behind by the old editor, deduplicating topic
+    lists, and keeping publish dates consistent between source and destination so
+    the content history stays accurate.
+  </li>
+</ul>
+
+<h3>JavaScript bookmarklets for the work inside WP Admin</h3>
+
+<p>
+  Some of this work could not be done over an API, because it lived in a plugin
+  interface. Bookmarklets were the right answer there: dependency-free,
+  instantly shareable with the team, and run right on the screen a person is
+  already looking at.
+</p>
+
+<ul>
+  <li>
+    <strong>Broadcast unlinker.</strong> Disconnecting child-blog articles from
+    the parent site was a repetitive, multi-click task per post, repeated across
+    a very large number of posts. This bookmarklet works through the post list
+    automatically &mdash; opening each Broadcast modal, selecting the unlink
+    option, submitting, and moving on to the next one &mdash; with a built-in
+    guard that halts the run and reports to the console if the same post keeps
+    reappearing, so it fails safely rather than looping.
+  </li>
+  <li>
+    <strong>Connected child site lister.</strong> Prints the full list of child
+    sites connected to a given parent post to the browser console. Knowing
+    exactly which sites a post reaches before changing anything removes the
+    guesswork from every decision that follows.
+  </li>
+  <li>
+    <strong>Targeted blog deselection.</strong> Deselects connected blogs so a
+    single site's version of a post can be updated on its own, without pushing
+    the change out to every other site on the network. This made it possible to
+    honor one practice's content request without affecting the other 100+.
+  </li>
+  <li>
+    <strong>Duplicate post title checker.</strong> Scans post titles and flags
+    duplicates, which surfaced accidental duplicate posts on the parent site
+    before they could be broadcast outward and multiply into a network-wide
+    duplicate content problem.
+  </li>
+  <li>
+    <strong>Copy meta description to excerpt.</strong> A one-click fix for a
+    recurring requirement in the new template, applied consistently rather than
+    from memory.
+  </li>
+</ul>
+
+<h3>A custom WordPress plugin for metadata at scale</h3>
+
+<p>
+  Partway through the project, a Yoast SEO update changed the bulk editor in two
+  ways that mattered to us. Entries were no longer listed in alphabetical order,
+  and the table was split across multiple paginated pages. Individually those are
+  minor interface choices. In combination, they broke a workflow we depend on.
+</p>
+
+<p>
+  Our team maintains a Google Sheet of template SEO metadata with dynamic
+  replacement variables for city names, provider types, and other
+  practice-specific values. That sheet is only usable if the destination list is
+  in a predictable alphabetical order on a single screen &mdash; otherwise every
+  entry has to be matched by hand across several pages, which is slow and
+  error-prone at portfolio scale.
+</p>
+
+<p>
+  Rather than change our process to fit the plugin, I wrote a small WordPress
+  plugin, <strong>Edit Yoast Fields</strong>, that restores the workflow. It
+  registers the Yoast SEO title and meta description fields with the REST API,
+  then provides a single admin screen with separate tabs for titles and
+  descriptions. It requests content alphabetically by title, follows pagination
+  behind the scenes, and presents everything on one page &mdash; showing the
+  current value next to an editable new value for each entry, with per-row saving
+  and a Save All option. It covers our full content model: posts, pages, events,
+  hearing aids, locations, professionals, and testimonials. Permission checks
+  follow WordPress conventions, so the plugin grants no access a user does not
+  already have.
+</p>
+
+<p>
+  The practical result is that applying a full set of templated metadata to a
+  site went from a tedious multi-page reconciliation to a straightforward
+  paste-and-review pass.
+</p>
+
+<h3>A reusable Yoast settings import template</h3>
+
+<p>
+  Yoast configuration is easy to get subtly wrong and tedious to verify across
+  110+ sites. I built a settings generator that produces a ready-to-paste Yoast
+  import file encoding our standard configuration &mdash; title and description
+  patterns, and indexation rules that keep internal-only content types and
+  taxonomies out of the XML sitemap and the index, such as attachments, design
+  library collections, document and testimonial post types, and tag and format
+  archives.
+</p>
+
+<p>
+  This turned a long manual checklist into a single import step, which does more
+  than save time: it guarantees every site in the portfolio starts from the same
+  known-good baseline, so a sitemap full of pages nobody should be landing on
+  never becomes a surprise after launch.
+</p>
+
+<h3>AI assistants for repeatable content tasks</h3>
+
+<p>
+  I also built a set of custom Gemini Gems (now called Skills) so the team could
+  produce consistent, on-brand content for the tasks that recur on every
+  migration &mdash; an <strong>Alt Text Generator</strong> for image
+  accessibility, a <strong>Meta Description Generator</strong> tuned for blogs
+  and evergreen pages, a <strong>Google Business Profile post generator</strong>
+  that respects platform limits and best practices, a
+  <strong>Category Picker</strong> that assigns blog categories from our approved
+  list, a <strong>Website List Comparison Tool</strong> for reconciling site
+  inventories between sources, and a <strong>Top Local Competitors Synthesis</strong>
+  tool that identifies local competitors from raw data and explains its
+  reasoning.
+</p>
+
+<p>
+  Each one encodes our standards and guidelines so the output is consistent no
+  matter who runs it. As with everything else here, the AI handles throughput and
+  a person reviews before anything reaches a client site.
+</p>
+
+<h3>What the tooling actually bought us</h3>
+
+<p>
+  The honest value was not speed for its own sake &mdash; it was consistency and
+  confidence. Scripted migration means the 90th site gets the same care as the
+  first, the settings template means every site starts from the same known-good
+  configuration, the diff checker means we find a missing page before the client
+  does, and the logs mean that when someone asks what happened to a specific
+  post, we can answer precisely rather than from recollection. That is what lets
+  us tell a practice owner, truthfully, that their content came across intact.
+</p>
+
 <h2>What I'd tell another strategist</h2>
 
 <p>
@@ -113,4 +331,15 @@ skills:
   surprises the stakeholder still damages trust. Telling a marketing manager
   in advance that they may see two to four weeks of ranking fluctuation turns a
   support escalation into an expected event.
+</p>
+
+<p>
+  The third is a willingness to build. Vendor tools get discontinued, and vendor
+  interfaces change in ways that quietly break a workflow that was running well.
+  Both happened on this project. The choice in that moment is to absorb the
+  manual cost indefinitely or to rebuild the capability. With AI as a development
+  partner, building a tested, documented replacement is now a matter of days
+  rather than weeks &mdash; and the version you build yourself fits your
+  workflow, logs what you need it to log, and does not change out from under you
+  on someone else's release schedule.
 </p>
