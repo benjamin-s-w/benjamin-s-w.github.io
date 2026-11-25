@@ -41,9 +41,13 @@ jobs:
       - name: Check links
         uses: lycheeverse/lychee-action@v2
         with:
+          # --root-dir is required so root-relative hrefs like "/about/"
+          # resolve against dist/ instead of the filesystem root.
+          # 999 is LinkedIn, which blocks automated requests by design.
           args: >-
             --no-progress
             --include-fragments
+            --root-dir "$GITHUB_WORKSPACE/dist"
             --accept 200,206,999
             --exclude-path dist/404.html
             'dist/**/*.html'
