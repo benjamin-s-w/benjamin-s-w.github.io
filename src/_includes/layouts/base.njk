@@ -30,9 +30,9 @@
 <meta name="twitter:image" content="{{ metaImage }}">
 
 {#-
-  GitHub Pages cannot set custom response headers, so the HSTS/CSP/nosniff
-  headers this project originally shipped are not available. referrer is one
-  of the few directives that is honoured as a meta tag. See /technical-notes/.
+  GitHub Pages cannot set custom response headers, so HSTS, CSP, and
+  X-Content-Type-Options are not available here. referrer is one of the few
+  directives that is honoured as a meta tag. See /technical-notes/.
 -#}
 <meta name="referrer" content="strict-origin-when-cross-origin">
 
@@ -48,11 +48,15 @@
 {% include "partials/schema.njk" %}
 </head>
 {#-
-  hx-boost intercepts same-origin link clicks and fetches the SAME complete
-  HTML document a crawler receives, then swaps only <main>. No fragment URLs
-  exist. With JS off, every link is a plain anchor. See /technical-notes/.
+  No JavaScript. Instant navigation is delegated to the browser through the
+  Speculation Rules script at the end of <body>: supporting browsers prerender
+  a same-origin page on hover or pointerdown, so the click resolves to an
+  already-rendered document. Everything else performs a normal navigation.
+  Because every transition is a real navigation, focus, scroll restoration,
+  history, <head> metadata, and screen reader announcements are handled
+  natively and need no repair. See /technical-notes/.
 -#}
-<body hx-boost="true" hx-target="#main" hx-select="#main" hx-swap="outerHTML">
+<body>
 <a class="skip-link" href="#main">Skip to main content</a>
 
 {% include "partials/header.njk" %}
@@ -63,9 +67,15 @@
 
 {% include "partials/footer.njk" %}
 
-<div id="route-announcer" class="visually-hidden" role="status" aria-live="polite" aria-atomic="true"></div>
-
-<script src="/assets/js/htmx.min.js" defer></script>
-<script src="/assets/js/enhance.js" defer></script>
+<script type="speculationrules">
+{
+  "prerender": [
+    {
+      "where": { "href_matches": "/*" },
+      "eagerness": "moderate"
+    }
+  ]
+}
+</script>
 </body>
 </html>

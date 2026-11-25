@@ -8,17 +8,5 @@
     "require-sri": "off",
     "long-title": ["error", { "maxlength": 70 }]
   },
-  "elements": [
-    "html5",
-    {
-      "body": {
-        "attributes": {
-          "hx-boost": { "enum": ["true", "false"] },
-          "hx-target": {},
-          "hx-select": {},
-          "hx-swap": {}
-        }
-      }
-    }
-  ]
+  "elements": ["html5"]
 }

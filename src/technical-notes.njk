@@ -1,7 +1,7 @@
 ---
 layout: base.njk
 title: Technical Notes
-description: "How this site is built and why: static-first htmx, Lighthouse budgets enforced in CI, structured data, and accessible boosted navigation."
+description: "How this site is built and why: a zero-JavaScript static architecture, instant navigation from the platform, and Lighthouse budgets enforced in CI."
 permalink: /technical-notes/
 sitemapPriority: 0.7
 ---
@@ -23,93 +23,154 @@ sitemapPriority: 0.7
       <h2>The constraint I set myself</h2>
 
       <p>
-        I wanted to use htmx, because I like it and because it suits a site this
-        size. The obvious problem: the common htmx pattern &mdash; request a
-        partial, inject it into a container &mdash; produces pages whose content
-        doesn't exist in the initial HTML response. On a site whose purpose is
-        demonstrating that I understand crawlability, that would be a
-        self-inflicted wound. Anyone evaluating me can press Ctrl+U.
+        <strong>Ship zero JavaScript, and give up nothing for it.</strong>
       </p>
 
       <p>
-        So the constraint was: <strong>use htmx without ever producing a URL
-        that returns a fragment</strong>.
+        That constraint is not asceticism. On a site whose purpose is
+        demonstrating that I understand crawlability and performance, every
+        kilobyte of script is a claim I have to defend. Anyone evaluating me can
+        press Ctrl+U, open DevTools, and check whether the architecture matches
+        the argument. So the rule was: if the platform can do it, the platform
+        does it.
       </p>
 
-      <h2>Static-first, enhanced second</h2>
+      <h2>Static-first, and that's the whole stack</h2>
 
       <p>
         Every page here is a complete, pre-rendered HTML document at a real URL,
         generated at build time by Eleventy. There is no server-side rendering
-        at request time and no client-side routing.
-      </p>
-
-      <p>
-        htmx is layered on top as progressive enhancement using
-        <code>hx-boost</code> with <code>hx-select="#main"</code>. When you click
-        a link, htmx fetches <em>the same complete document a crawler receives</em>
-        and swaps only the <code>&lt;main&gt;</code> element. That produces three
-        properties I wanted:
+        at request time, no client-side routing, no hydration, and no runtime
+        framework. What the crawler receives is what the browser renders.
       </p>
 
       <ul>
         <li>
-          <strong>No fragment URLs exist.</strong> There is nothing extra to
-          crawl, canonicalize, or de-duplicate. The duplicate-content surface is
-          zero because there is only ever one representation of each page.
+          <strong>Only one representation of each page exists.</strong> There
+          are no fragment or partial URLs, so there is nothing extra to crawl,
+          canonicalize, or de-duplicate. The duplicate-content surface is zero.
         </li>
         <li>
-          <strong>It works with JavaScript disabled.</strong> Every link is an
-          ordinary anchor with a real <code>href</code>. Turn JS off and the
-          site is fully functional, just without the soft navigation.
+          <strong>Content has no rendering dependency.</strong> Everything is in
+          the first response. No JS execution is required to see any of it.
         </li>
         <li>
-          <strong>Crawlers get everything in the first response.</strong> No
-          rendering dependency, no JS execution required for content.
+          <strong>Nothing degrades.</strong> There is no enhanced mode to fall
+          out of, because there is no enhancement layer to begin with.
         </li>
       </ul>
 
-      <p>
-        The trade-off is honest: boosted navigation re-downloads the full
-        document rather than just the changed region. At this page weight
-        that's a non-issue, and I'd rather pay a few kilobytes than introduce a
-        crawlability question. On a large content site I'd reconsider.
-      </p>
-
-      <h2>The accessibility problem boosted navigation creates</h2>
+      <h2>Instant navigation without JavaScript</h2>
 
       <p>
-        This is the part most htmx implementations skip. When you swap content
-        without a real page load, screen readers are not told anything happened.
-        The user hears silence, and focus is left wherever it was &mdash; often
-        at the bottom of the previous page.
+        The usual reason to add a router is to avoid the flash between pages.
+        I wanted that too, so I delegated it to the browser using the
+        <a href="https://developer.mozilla.org/en-US/docs/Web/API/Speculation_Rules_API" rel="noopener">Speculation&nbsp;Rules&nbsp;API</a>
+        &mdash; a small block of declarative JSON, not a script:
       </p>
 
-      <p>Three fixes are implemented here:</p>
-
-      <ol>
-        <li>
-          A visually hidden <code>aria-live="polite"</code> region announces the
-          new page title after each swap.
-        </li>
-        <li>
-          Focus is moved programmatically to <code>&lt;main&gt;</code>, which
-          carries <code>tabindex="-1"</code> so it can receive focus without
-          entering the tab order.
-        </li>
-        <li>
-          The document <code>&lt;title&gt;</code>, meta description, canonical
-          link, and robots directive are parsed from the fetched response and
-          applied to the live document, so the tab, history entry, and any
-          JS-executing crawler all see correct metadata.
-        </li>
-      </ol>
+      <pre><code>&lt;script type="speculationrules"&gt;
+{
+  "prerender": [
+    {
+      "where": { "href_matches": "/*" },
+      "eagerness": "moderate"
+    }
+  ]
+}
+&lt;/script&gt;</code></pre>
 
       <p>
-        There's also a failure path: if a boosted request errors, the script
-        falls back to a real browser navigation rather than stranding the user
-        on a stale page.
+        On a supporting browser, hovering or pressing down on a same-origin link
+        causes the next page to be fetched <em>and fully rendered</em> in the
+        background. By the time the click registers, the document is already
+        painted, so the navigation is effectively instant &mdash; faster than a
+        client-side router, which can only begin fetching <em>after</em> the
+        click.
       </p>
+
+      <p>
+        The part I care about most is what this <em>doesn't</em> require. Because
+        every transition is a genuine navigation, the browser handles focus
+        placement, scroll restoration, history entries, the document
+        <code>&lt;title&gt;</code>, the canonical link, and the screen reader's
+        page-change announcement. All of it is correct by default.
+      </p>
+
+      <h2>The accessibility bug I removed by deleting code</h2>
+
+      <p>
+        This site previously used a JavaScript library to swap page content
+        without a full navigation. That approach works, but it silently breaks
+        things the browser otherwise gets right: screen readers are not told the
+        page changed, and focus is left wherever it was &mdash; often at the
+        bottom of the previous page.
+      </p>
+
+      <p>
+        Repairing that took a hand-written script: an
+        <code>aria-live</code> region to announce each new page title, code to
+        move focus to <code>&lt;main&gt;</code>, code to reset scroll position,
+        logic to parse the incoming response and sync the
+        <code>&lt;title&gt;</code>, meta description, canonical, and robots
+        directive, and a fallback path for failed requests.
+      </p>
+
+      <p>
+        That is roughly 120 lines of code whose entire purpose was to make a
+        simulated navigation behave like a real one &mdash; plus a second,
+        untested copy of metadata logic that already existed in the template,
+        free to drift out of sync. Deleting the library deleted the bug class
+        along with it. <strong>The most reliable accessibility fix available
+        here was removing the thing that required the fix.</strong>
+      </p>
+
+      <h2>Why there is no framework here</h2>
+
+      <p>
+        I measured rather than assumed. The library and its repair script came
+        to roughly 55&nbsp;KB uncompressed. The entire site &mdash; fifteen
+        pages of HTML &mdash; averages about 15&nbsp;KB per page.
+      </p>
+
+      <p>
+        So a first-time visitor downloaded more JavaScript than they would read
+        content across three pages, in order to avoid a transition flash that
+        modern browsers already suppress through paint holding. The script also
+        competed directly against the performance and blocking-time budgets this
+        repository enforces in CI. The cost was real and recurring; the benefit
+        was marginal and already partly provided for free.
+      </p>
+
+      <p>
+        Removing it was not a downgrade. It was faster navigation, better
+        accessibility, and less code. I am documenting the reversal rather than
+        quietly rewriting history, because recognising when a tool you like is
+        not earning its weight is the part of this job that actually matters.
+      </p>
+
+      <h2>The accessibility work that remains</h2>
+
+      <p>
+        Deleting the navigation layer removed the hardest accessibility problem
+        on this site, but not the responsibility. What remains is deliberate:
+      </p>
+
+      <ul>
+        <li>
+          A skip link, semantic landmarks, one <code>h1</code> per page, and a
+          heading hierarchy that never skips a level.
+        </li>
+        <li>
+          Visible focus indicators, and a <code>&lt;main&gt;</code> element with
+          <code>tabindex="-1"</code> so the skip link can move focus into it.
+        </li>
+        <li>WCAG&nbsp;2.2&nbsp;AA contrast, verified in CI rather than by eye.</li>
+        <li>
+          <code>prefers-color-scheme</code> and
+          <code>prefers-reduced-motion</code> both honoured.
+        </li>
+      </ul>
 
       <h2>Performance decisions</h2>
 
@@ -139,8 +200,8 @@ sitemapPriority: 0.7
             <td>It is the LCP element on the pages where it appears.</td>
           </tr>
           <tr>
-            <td>Deferred JavaScript</td>
-            <td>Nothing blocks the initial render. Total JS is htmx plus a small enhancement script.</td>
+            <td>No JavaScript</td>
+            <td>Nothing to download, parse, execute, block rendering, or keep accessible.</td>
           </tr>
           <tr>
             <td>No analytics, no third-party scripts</td>
@@ -157,9 +218,7 @@ sitemapPriority: 0.7
         <li>JSON-LD graph: <code>Person</code>, <code>WebSite</code>, <code>ProfilePage</code> on the about page, <code>Article</code> on case studies, and <code>BreadcrumbList</code> throughout.</li>
         <li>Open Graph and Twitter card metadata with a generated 1200&times;630 image.</li>
         <li><code>sitemap.xml</code> generated from the content collection, so a new page cannot be omitted by forgetting to update it.</li>
-        <li>Semantic landmarks, a single <code>h1</code> per page, and a logical heading hierarchy.</li>
-        <li>A skip link, visible focus indicators, and WCAG&nbsp;2.2&nbsp;AA contrast.</li>
-        <li>A <code>prefers-color-scheme</code> dark variant and <code>prefers-reduced-motion</code> handling.</li>
+        <li>Content delivered in the initial HTML response, with no rendering step between the crawler and the text.</li>
       </ul>
 
       <h2>CI, and why it's the interesting part</h2>
@@ -191,23 +250,21 @@ sitemapPriority: 0.7
       </p>
 
       <p>
-        I originally built this for Cloudflare Workers so I could declare
-        security headers &mdash; HSTS, a content security policy,
-        <code>X-Content-Type-Options</code> &mdash; in version control. Then I
-        checked the DNS and found that attaching a Worker to a custom domain
-        requires moving the whole domain's nameservers to Cloudflare. That meant
-        migrating a live site's MX and SPF records just to host a portfolio.
-        The risk was disproportionate to the benefit, so I changed course.
+        The real limitation of this host is that it cannot set custom response
+        headers. HSTS, a content security policy, and
+        <code>X-Content-Type-Options</code> are therefore unavailable. Moving to
+        a platform that supports them would mean taking on DNS and operational
+        risk for a site that does not carry the kind of traffic those headers
+        protect, so I accepted the limitation instead.
       </p>
 
       <p>
-        GitHub Pages cannot set custom response headers, so that capability is
-        genuinely gone. What remains is a <code>referrer</code> meta tag and the
-        structural reasons the headers mattered less here than they would
-        elsewhere: no forms, no authentication, no cookies, no user input, and
-        no third-party scripts. A content security policy mitigates injection;
-        this site has no injection surface. HSTS protects credentials in
-        transit; there are no credentials.
+        What remains is a <code>referrer</code> meta tag, plus the structural
+        reasons those headers matter less here than they would elsewhere: no
+        forms, no authentication, no cookies, no user input, no third-party
+        scripts, and now no JavaScript at all. A content security policy
+        mitigates injection; this site has no injection surface. HSTS protects
+        credentials in transit; there are no credentials.
       </p>
 
       <p>
@@ -219,11 +276,19 @@ sitemapPriority: 0.7
       <h2>What I'd do differently at scale</h2>
 
       <p>
-        For a site this size, the architecture above is close to optimal. If
-        this were a thousand-page content site I'd revisit the full-document
-        boost pattern, add incremental builds, and introduce a real image CDN
-        rather than build-time generation. I mention that because knowing when
-        an approach stops scaling is part of knowing the approach.
+        For a site this size, the architecture above is close to optimal. At a
+        thousand pages I'd tune the prerender <code>eagerness</code> down to
+        avoid speculating on links nobody follows, add incremental builds so a
+        one-page change doesn't rebuild the world, and move to a real image CDN
+        rather than generating every derivative at build time.
+      </p>
+
+      <p>
+        I'd also expect the zero-JavaScript rule to stop holding. A search
+        interface, a filterable index, or anything with genuine state is worth
+        shipping code for. The rule was never "JavaScript is bad" &mdash; it was
+        "make it justify its weight", and on fifteen static pages it couldn't.
+        Knowing where an approach stops scaling is part of knowing the approach.
       </p>
     </div>
 

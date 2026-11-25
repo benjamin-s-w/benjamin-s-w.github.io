@@ -2,8 +2,8 @@
 
 SEO portfolio for Ben Woodruff — Search Engine Optimization Specialist.
 
-Static site built with [Eleventy](https://www.11ty.dev/), progressively enhanced
-with [htmx](https://htmx.org/), deployed to GitHub Pages by GitHub Actions.
+Zero-JavaScript static site built with [Eleventy](https://www.11ty.dev/),
+deployed to GitHub Pages by GitHub Actions.
 
 ---
 
@@ -25,24 +25,29 @@ A change that regresses SEO or accessibility cannot reach `main`.
 
 ## Architecture
 
-### Static-first htmx
-
-The common htmx pattern — request a partial and inject it — produces pages whose
-content is absent from the initial HTML response. On an SEO portfolio that would
-be a self-inflicted wound.
-
-Instead:
+### Static-first, zero JavaScript
 
 - Every page is a complete pre-rendered HTML document at a real URL.
-- htmx uses `hx-boost` with `hx-select="#main"`, fetching the **same full
-  document a crawler receives** and swapping only `<main>`.
 - No fragment URLs exist, so there is nothing extra to crawl, canonicalize, or
   de-duplicate.
-- With JavaScript disabled, every link is an ordinary anchor and the site works.
+- No client-side routing, no hydration, no runtime framework. What the crawler
+  receives is what the browser renders.
 
-`src/assets/js/enhance.js` handles the three things boosted navigation breaks:
-screen reader announcements (`aria-live`), focus management, and `<head>`
-metadata sync (title, description, canonical, robots).
+Instant navigation is delegated to the browser via the
+[Speculation Rules API](https://developer.mozilla.org/en-US/docs/Web/API/Speculation_Rules_API)
+— a declarative JSON block in `base.njk`, not a script. Supporting browsers
+prerender same-origin links on hover/pointerdown; everything else performs a
+normal navigation.
+
+Because every transition is a real navigation, focus, scroll restoration,
+history, `<head>` metadata, and screen reader page-change announcements are
+handled natively and need no repair code.
+
+This replaced a client-side navigation library plus ~120 lines of enhancement
+script that existed only to patch what soft navigation broke. Removing it cut
+~55 KB of JavaScript, made navigation faster, and deleted a class of
+accessibility bugs outright. The reasoning is documented on
+`/technical-notes/`.
 
 ### Single source of truth
 
@@ -106,17 +111,13 @@ serve from the domain root. A differently-named repo publishes to
 `benjamin-s-w.github.io/<repo>/`, which would break every absolute URL in
 `sitemap.xml` and the canonicals.
 
-### Why not Cloudflare
-
-This was originally built for Cloudflare Workers so security headers could be
-declared in version control. Attaching a Worker to a custom domain requires the
-domain's nameservers to be on Cloudflare, which would have meant migrating a
-live site's MX and SPF records just to host a portfolio. Disproportionate risk,
-so GitHub Pages it is.
+### Known limitation: response headers
 
 GitHub Pages cannot set custom response headers, so HSTS, CSP, and
 `X-Content-Type-Options` are not available. Only `referrer` survives, as a meta
-tag. The trade-off is documented on `/technical-notes/` rather than hidden.
+tag. The site has no forms, authentication, cookies, user input, third-party
+scripts, or JavaScript, so the attack surface those headers mitigate is largely
+absent. The trade-off is documented on `/technical-notes/` rather than hidden.
 
 ### Moving to a custom domain later
 
@@ -135,7 +136,7 @@ src/
   _includes/
     layouts/       base.njk, case-study.njk
     partials/      header, footer, schema, hero-photo
-  assets/          css, js, img, favicon
+  assets/          css, img, favicon
   case-studies/    six case studies + shared front matter
   static/          _headers (copied to site root)
   *.njk            pages
