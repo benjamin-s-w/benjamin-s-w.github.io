@@ -110,9 +110,9 @@ serve from the domain root. A differently-named repo publishes to
 
 This was originally built for Cloudflare Workers so security headers could be
 declared in version control. Attaching a Worker to a custom domain requires the
-domain's nameservers to be on Cloudflare — `woodruffmultimedia.com` is on
-SiteGround, so that meant migrating a live site's MX and SPF records to host a
-portfolio. Disproportionate risk, so GitHub Pages it is.
+domain's nameservers to be on Cloudflare, which would have meant migrating a
+live site's MX and SPF records just to host a portfolio. Disproportionate risk,
+so GitHub Pages it is.
 
 GitHub Pages cannot set custom response headers, so HSTS, CSP, and
 `X-Content-Type-Options` are not available. Only `referrer` survives, as a meta
@@ -136,7 +136,7 @@ src/
     layouts/       base.njk, case-study.njk
     partials/      header, footer, schema, hero-photo
   assets/          css, js, img, favicon
-  case-studies/    five case studies + shared front matter
+  case-studies/    six case studies + shared front matter
   static/          _headers (copied to site root)
   *.njk            pages
 tools/

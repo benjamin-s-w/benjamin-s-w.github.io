@@ -62,6 +62,20 @@ export default {
       ],
     },
     {
+      slug: "service-design",
+      title: "Service Design & Client Strategy",
+      summary:
+        "Turning an SEO offering into something a team can deliver consistently and a client can understand, approve, and renew.",
+      items: [
+        "Competitive research into comparable SEO offerings and deliverables",
+        "Positioning, packaging, and pricing structure recommendations",
+        "Implementation guides and standardized deliverable templates",
+        "Annual strategy check-in frameworks and scoring rubrics",
+        "Tiered roadmaps that match recommendations to practice maturity",
+        "Sales and onboarding support for a new service line",
+      ],
+    },
+    {
       slug: "automation",
       title: "Workflow Automation & AI Search",
       summary:

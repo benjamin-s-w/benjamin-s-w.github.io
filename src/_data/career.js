@@ -1,7 +1,7 @@
 /**
  * Career history, quantified results, and capability data.
- * Sources: LinkedIn profile (titles, dates, bullets) and
- * woodruffmultimedia.com case studies (client metrics, testimonial).
+ * Sources: LinkedIn profile (titles, dates, bullets) and internal
+ * engagement records (client metrics, testimonial).
  */
 export default {
   yearsExperience: 8,
@@ -9,10 +9,10 @@ export default {
   // --- Headline proof metrics (homepage hero) ---------------------------
   metrics: [
     {
-      value: "110+",
+      value: "25+",
       label: "client sites migrated",
       detail:
-        "Legacy custom themes to a modern WordPress block framework, with redirect mapping that protected organic rankings and traffic equity.",
+        "Of a 110+ site portfolio moving from legacy custom themes to a modern WordPress block framework, with redirect mapping that protected organic rankings and traffic equity.",
     },
     {
       value: "30–40%",
@@ -27,10 +27,10 @@ export default {
         "Rebuilt landing page templates cut cost per lead from $271 to $125 for a multi-location client campaign.",
     },
     {
-      value: "8+",
-      label: "years in SEO",
+      value: "5",
+      label: "clients on the new SEO service",
       detail:
-        "Agency and in-house experience across multi-location healthcare and B2B brands since 2018.",
+        "Modernized SEO offering taken from positioning and pricing through enablement, sales support, and annual strategy check-ins.",
     },
   ],
 
@@ -46,11 +46,19 @@ export default {
       endLabel: "Present",
       location: "Greer, South Carolina",
       summary:
-        "Own technical, local, and content SEO strategy across a large multi-location healthcare client portfolio.",
+        "Own technical, local, and content SEO strategy across a large multi-location healthcare client portfolio, and led the modernization of the SEO service itself.",
       bullets: [
         {
+          heading: "SEO service modernization & sales enablement",
+          text: "Led the transition from a legacy monthly blogging and local listings program to a strategic SEO service — researching competitor offerings, shaping positioning and pricing, and building the implementation guides and standardized client deliverables behind it, then supporting sales and onboarding for the first five clients.",
+        },
+        {
+          heading: "Annual strategy check-ins & keyword approvals",
+          text: "Built a standardized 33-slide Web & SEO Strategy Check-In template used in annual planning sessions with specialists, marketing managers, and practice stakeholders to diagnose year-over-year performance, align on a tiered growth roadmap, and approve target keyword opportunities.",
+        },
+        {
           heading: "Large-scale website migrations & architecture",
-          text: "Lead SEO strategy, information architecture, and redirect mapping for 110+ client websites migrating from legacy custom themes to a modern WordPress block framework, safeguarding organic rankings and traffic equity.",
+          text: "Lead SEO strategy, information architecture, and redirect mapping as a 110+ site client portfolio moves off legacy custom themes onto a modern WordPress block framework — 25+ sites migrated to date, safeguarding organic rankings and traffic equity.",
         },
         {
           heading: "Technical SEO & analytics governance",
@@ -101,36 +109,6 @@ export default {
         {
           heading: "Key achievement",
           text: "Spearheaded the Tobias Hearing Center website redesign and SEO overhaul, achieving peak annual call volume in October and an all-time record for booked appointments in December 2020.",
-        },
-      ],
-    },
-    {
-      title: "Owner & Lead Generation Specialist",
-      company: "Woodruff Multimedia",
-      employmentType: "Self-employed",
-      start: "2018-01",
-      end: null,
-      startLabel: "2018",
-      endLabel: "Present",
-      location: "Upstate South Carolina",
-      summary:
-        "Veteran-owned web design and SEO practice serving small and local businesses across the US and Canada.",
-      bullets: [
-        {
-          heading: "Full-service local SEO",
-          text: "Technical and on-page SEO setup, schema.org markup, Google Search Console, Google Analytics, and Google Tag Manager implementation, with custom Looker Studio reporting dashboards for clients on dedicated SEO plans.",
-        },
-        {
-          heading: "SEO audits & diagnostics",
-          text: "Perform audits to troubleshoot real and perceived inbound marketing shortfalls, then translate findings into prioritized recommendations for non-technical business owners.",
-        },
-        {
-          heading: "Core Web Vitals remediation",
-          text: "Diagnose and resolve loading speed, interactivity, and visual stability issues caused by outdated themes, jQuery-dependent layouts, and third-party plugin bloat.",
-        },
-        {
-          heading: "Website delivery",
-          text: "70+ websites built since 2018 across healthcare, home services, non-profit, and agency white-label engagements.",
         },
       ],
     },

@@ -36,7 +36,6 @@ export default {
   // --- Profiles ---------------------------------------------------------
   linkedin: "https://www.linkedin.com/in/ben-woodruff-236b3223a/",
   github: "https://github.com/benjamin-s-w",
-  agency: "https://woodruffmultimedia.com",
 
   // --- Assets -----------------------------------------------------------
   headshot: "/assets/img/ben-woodruff.jpg",
