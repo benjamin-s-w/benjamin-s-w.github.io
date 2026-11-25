@@ -1,0 +1,53 @@
+---
+layout: base.njk
+title: Capabilities
+description: "Technical and enterprise SEO, local and multi-location search, analytics and attribution, content strategy, and workflow automation."
+permalink: /capabilities/
+sitemapPriority: 0.8
+---
+
+<section class="page-head">
+  <div class="wrap">
+    <p class="page-head__eyebrow">Capabilities</p>
+    <h1>What I can own for a portfolio of accounts.</h1>
+    <p class="lede" style="margin-top:var(--space-m)">
+      Five areas, listed specifically enough that you can tell whether I've
+      actually done the thing.
+    </p>
+  </div>
+</section>
+
+<section class="section section--flush">
+  <div class="wrap">
+    {%- for area in capabilities.areas %}
+    <div id="{{ area.slug }}" style="margin-bottom:var(--space-2xl)">
+      <h2>{{ area.title }}</h2>
+      <p class="lede" style="margin-top:var(--space-s)">{{ area.summary }}</p>
+      <ul class="checklist" style="margin-top:var(--space-m)">
+        {%- for item in area.items %}
+        <li>{{ item }}</li>
+        {%- endfor %}
+      </ul>
+    </div>
+    {%- endfor %}
+  </div>
+</section>
+
+<section class="section section--alt">
+  <div class="wrap stack">
+    <h2>Tools</h2>
+    <ul class="tags">
+      {%- for tool in capabilities.tools %}
+      <li class="tag">{{ tool }}</li>
+      {%- endfor %}
+    </ul>
+    <p class="muted">
+      Tools matter less than the reasoning behind their use, but it's a fair
+      question, so here's the honest list of what I work in regularly.
+    </p>
+    <div class="actions">
+      <a class="btn btn--primary" href="/case-studies/">See it applied</a>
+      <a class="btn btn--ghost" href="/approach/">How I prioritize</a>
+    </div>
+  </div>
+</section>

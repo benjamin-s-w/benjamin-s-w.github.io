@@ -1,0 +1,50 @@
+---
+layout: base.njk
+title: Case Studies
+description: "SEO case studies: a 110+ site migration, local search for multi-location healthcare, attribution architecture, audit automation, and conversion work."
+permalink: /case-studies/
+sitemapPriority: 0.9
+---
+
+<section class="page-head">
+  <div class="wrap">
+    <p class="page-head__eyebrow">Case Studies</p>
+    <h1>Work with the reasoning left in.</h1>
+    <p class="lede" style="margin-top:var(--space-m)">
+      Each of these describes the situation, what made it difficult, what I
+      actually did, and what happened &mdash; including where the evidence is
+      limited.
+    </p>
+  </div>
+</section>
+
+<section class="section section--flush">
+  <div class="wrap">
+    <ul class="cards">
+      {%- for study in collections.caseStudies %}
+      <li class="card">
+        <p class="card__eyebrow">{{ study.data.discipline }}</p>
+        <h2 class="card__title"><a href="{{ study.url }}">{{ study.data.title }}</a></h2>
+        <p class="muted">{{ study.data.cardSummary }}</p>
+        <p class="card__result">{{ study.data.headlineResult }} &middot; {{ study.data.headlineLabel }}</p>
+      </li>
+      {%- endfor %}
+    </ul>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap wrap--narrow stack">
+    <h2>A note on attribution</h2>
+    <p class="muted">
+      The figures on this site come from engagements at Audigy and its sister
+      brands, and from independent client work through Woodruff Multimedia.
+      Where a result was reported to me by a client or an internal team rather
+      than measured directly by me, I say so on the page. Where a sample size
+      was small, I say that too.
+    </p>
+    <div class="actions">
+      <a class="btn btn--primary" href="/contact/">Discuss this work</a>
+    </div>
+  </div>
+</section>

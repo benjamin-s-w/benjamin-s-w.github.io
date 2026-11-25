@@ -1,0 +1,123 @@
+---
+layout: base.njk
+title: About Ben Woodruff
+description: "Army veteran turned SEO strategist. Summa Cum Laude in Digital Technology and Culture, 8+ years leading technical and local SEO for healthcare clients."
+permalink: /about/
+isAbout: true
+sitemapPriority: 0.9
+---
+
+<section class="page-head">
+  <div class="wrap">
+    <p class="page-head__eyebrow">About</p>
+    <h1>From the Army to enterprise SEO.</h1>
+    <p class="lede" style="margin-top:var(--space-m)">
+      I bridge the gap between what search engines require and what front-end
+      engineering can actually deliver.
+    </p>
+  </div>
+</section>
+
+<section class="section section--flush">
+  <div class="wrap">
+    <div class="hero__grid">
+      <div class="prose">
+        <p>
+          I came to digital marketing the long way around. I learned to work hard
+          as a young person, applied it in the <strong>United States Army</strong>,
+          then spent time delivering and installing window coverings before going
+          back to school on the GI Bill.
+        </p>
+        <p>
+          That turned into an Associate of Arts from Clark College on the Vice
+          President's Honor Roll, and then a
+          <strong>BA in Digital Technology and Culture</strong> from Washington
+          State University Vancouver in 2018 &mdash; Summa Cum Laude, 3.96 GPA.
+          That program is where I first learned SEO, and I've been doing it
+          professionally ever since.
+        </p>
+        <p>
+          Since 2018 I've worked at <strong>Audigy</strong>, a fast-paced marketing
+          agency serving hearing healthcare practices and B2B partners. I started
+          building websites, moved into SEO, and now own technical, local, and
+          content SEO strategy across a portfolio of more than 110 client sites.
+          Alongside that, I run <strong>Woodruff Multimedia</strong>, a
+          veteran-owned web design and SEO practice serving small businesses
+          across the US and Canada.
+        </p>
+        <p>
+          The thread through all of it: I don't treat SEO as keywords and metadata.
+          I look under the hood &mdash; site architecture, CMS migrations, Core Web
+          Vitals, measurement plumbing &mdash; and then translate what I find into
+          language a practice owner or a marketing manager can act on.
+        </p>
+      </div>
+      <div>
+        {% include "partials/hero-photo.njk" %}
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <h2>Experience</h2>
+    <ol class="timeline" style="margin-top:var(--space-l)">
+      {%- for role in career.experience %}
+      <li class="role">
+        <div class="role__head">
+          <div>
+            <h3 class="role__title">{{ role.title }}</h3>
+            <p class="role__org">{{ role.company }} &middot; {{ role.location }}</p>
+          </div>
+          <p class="role__dates">{{ role.startLabel }} &ndash; {{ role.endLabel }}</p>
+        </div>
+        <p class="role__summary">{{ role.summary }}</p>
+        <ul class="role__bullets">
+          {%- for bullet in role.bullets %}
+          <li>
+            <h4>{{ bullet.heading }}</h4>
+            <p>{{ bullet.text }}</p>
+          </li>
+          {%- endfor %}
+        </ul>
+      </li>
+      {%- endfor %}
+    </ol>
+  </div>
+</section>
+
+<section class="section section--alt">
+  <div class="wrap">
+    <h2>Education &amp; service</h2>
+    <ul class="cards" style="margin-top:var(--space-l)">
+      {%- for school in career.education %}
+      <li class="card">
+        <h3 class="card__title">{{ school.credential }}</h3>
+        <p class="muted">{{ school.institution }} &middot; {{ school.year }}</p>
+        <p class="card__result">{{ school.honors }}</p>
+        {%- if school.note %}<p class="muted">{{ school.note }}</p>{% endif %}
+      </li>
+      {%- endfor %}
+      <li class="card">
+        <h3 class="card__title">{{ career.military.branch }}</h3>
+        <p class="muted">{{ career.military.note }}</p>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap wrap--narrow stack">
+    <h2>Tools I work in daily</h2>
+    <ul class="tags">
+      {%- for tool in capabilities.tools %}
+      <li class="tag">{{ tool }}</li>
+      {%- endfor %}
+    </ul>
+    <div class="actions">
+      <a class="btn btn--primary" href="/case-studies/">See the work</a>
+      <a class="btn btn--ghost" href="{{ site.resume }}">Download r&eacute;sum&eacute; (PDF)</a>
+    </div>
+  </div>
+</section>

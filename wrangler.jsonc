@@ -1,0 +1,22 @@
+{
+  // Cloudflare Workers Static Assets.
+  // Assets-only Worker: no script, so no ASSETS binding is declared.
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "ben-woodruff-seo",
+  "compatibility_date": "2026-11-25",
+
+  "assets": {
+    "directory": "./dist",
+
+    // Serve /about/ from /about/index.html and redirect /about to /about/
+    // so there is exactly one canonical URL per page.
+    "html_handling": "auto-trailing-slash",
+
+    // Serve the custom 404 page for unmatched paths, with a real 404 status.
+    "not_found_handling": "404-page"
+  },
+
+  "observability": {
+    "enabled": true
+  }
+}

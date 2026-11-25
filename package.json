@@ -1,0 +1,27 @@
+{
+  "name": "ben-woodruff-seo-portfolio",
+  "version": "1.0.0",
+  "description": "SEO portfolio site for Ben Woodruff — technical SEO, local search, and analytics.",
+  "license": "UNLICENSED",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "eleventy",
+    "dev": "eleventy --serve --port=8080",
+    "clean": "node -e \"require('fs').rmSync('dist',{recursive:true,force:true})\"",
+    "validate:html": "html-validate dist --ext html",
+    "validate:meta": "node tools/check-metadata.js",
+    "validate:links": "lychee --offline --no-progress --include-fragments \"dist/**/*.html\"",
+    "validate": "npm run validate:html && npm run validate:meta",
+    "test": "npm run build && npm run validate",
+    "lhci": "lhci autorun",
+    "resume": "node tools/build-resume.js",
+    "deploy": "wrangler deploy"
+  },
+  "devDependencies": {
+    "@11ty/eleventy": "^3.0.0",
+    "@lhci/cli": "^0.14.0",
+    "html-validate": "^9.0.0",
+    "sharp": "^0.33.0"
+  }
+}

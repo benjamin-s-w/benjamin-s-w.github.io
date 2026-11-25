@@ -1,0 +1,110 @@
+---
+layout: base.njk
+title: SEO Strategist
+description: "SEO strategist with 8+ years in technical SEO, local search, and analytics for multi-location healthcare brands. 110+ sites migrated, measurable lead growth."
+isHome: true
+sitemapPriority: 1.0
+---
+
+<section class="hero">
+  <div class="wrap hero__grid">
+    <div>
+      <p class="hero__eyebrow">{{ site.tagline }} &middot; {{ site.location.city }}, {{ site.location.regionCode }}</p>
+      <h1>SEO strategy that moves the business, not just the rankings.</h1>
+      <p class="hero__lede">
+        I'm Ben Woodruff. For eight years I've turned complex, multi-location
+        healthcare websites into organic acquisition channels &mdash; connecting
+        technical SEO, local search, and clean attribution so clients can see
+        exactly which work produced the call, the form fill, and the booked
+        appointment.
+      </p>
+      <div class="actions">
+        <a class="btn btn--primary" href="/case-studies/">See the work</a>
+        <a class="btn btn--ghost" href="/contact/">Get in touch</a>
+      </div>
+    </div>
+    <div>
+      {% include "partials/hero-photo.njk" %}
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <h2>Proof, in numbers</h2>
+    <p class="lede" style="margin-top:var(--space-s)">
+      Every figure below is tied to a specific engagement documented on this site.
+    </p>
+    <ul class="metrics" style="margin-top:var(--space-l)">
+      {%- for metric in career.metrics %}
+      <li class="metric">
+        <p class="metric__value">{{ metric.value }}</p>
+        <p class="metric__label">{{ metric.label }}</p>
+        <p class="metric__detail">{{ metric.detail }}</p>
+      </li>
+      {%- endfor %}
+    </ul>
+  </div>
+</section>
+
+<section class="section section--alt">
+  <div class="wrap">
+    <h2>What I do</h2>
+    <p class="lede" style="margin-top:var(--space-s)">
+      Strategy first, then the tactics that actually support it.
+    </p>
+    <ul class="cards" style="margin-top:var(--space-l)">
+      {%- for area in capabilities.areas %}
+      <li class="card">
+        <h3 class="card__title">{{ area.title }}</h3>
+        <p class="muted">{{ area.summary }}</p>
+      </li>
+      {%- endfor %}
+    </ul>
+    <div class="actions">
+      <a class="btn btn--ghost" href="/capabilities/">Full capability detail</a>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <h2>Selected case studies</h2>
+    <ul class="cards" style="margin-top:var(--space-l)">
+      {%- for study in collections.caseStudies %}
+      <li class="card">
+        <p class="card__eyebrow">{{ study.data.discipline }}</p>
+        <h3 class="card__title"><a href="{{ study.url }}">{{ study.data.title }}</a></h3>
+        <p class="muted">{{ study.data.cardSummary }}</p>
+        <p class="card__result">{{ study.data.headlineResult }}</p>
+      </li>
+      {%- endfor %}
+    </ul>
+  </div>
+</section>
+
+<section class="section section--alt">
+  <div class="wrap wrap--narrow">
+    <figure class="quote">
+      <p>&ldquo;{{ career.testimonial.quote }}&rdquo;</p>
+      <figcaption>
+        &mdash; {{ career.testimonial.author }}, {{ career.testimonial.role }}
+      </figcaption>
+    </figure>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap wrap--narrow stack">
+    <h2>Let's talk</h2>
+    <p class="muted">
+      I'm currently exploring SEO strategist roles where I can own strategy for a
+      portfolio of accounts and work alongside content, development, paid media,
+      and client-facing teams.
+    </p>
+    <div class="actions">
+      <a class="btn btn--primary" href="/contact/">Contact</a>
+      <a class="btn btn--ghost" href="{{ site.resume }}">Download r&eacute;sum&eacute; (PDF)</a>
+    </div>
+  </div>
+</section>

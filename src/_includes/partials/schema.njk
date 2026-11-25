@@ -1,0 +1,100 @@
+{#- Person: the core entity for this site -#}
+{%- set personId = site.url + "/#person" %}
+{%- set websiteId = site.url + "/#website" %}
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Person",
+      "@id": {{ personId | jsonld | safe }},
+      "name": {{ site.name | jsonld | safe }},
+      "jobTitle": {{ site.jobTitle | jsonld | safe }},
+      "description": {{ site.summary | jsonld | safe }},
+      "url": {{ site.url | jsonld | safe }},
+      "email": {{ ("mailto:" + site.email) | jsonld | safe }},
+      "image": {{ (site.headshot | absoluteUrl(site.url)) | jsonld | safe }},
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": {{ site.location.city | jsonld | safe }},
+        "addressRegion": {{ site.location.regionCode | jsonld | safe }},
+        "addressCountry": {{ site.location.countryCode | jsonld | safe }}
+      },
+      "alumniOf": [
+        {%- for school in career.education %}
+        {
+          "@type": "EducationalOrganization",
+          "name": {{ school.institution | jsonld | safe }}
+        }{% if not loop.last %},{% endif %}
+        {%- endfor %}
+      ],
+      "worksFor": {
+        "@type": "Organization",
+        "name": "Audigy"
+      },
+      "knowsAbout": [
+        {%- for area in capabilities.areas %}
+        {{ area.title | jsonld | safe }}{% if not loop.last %},{% endif %}
+        {%- endfor %}
+      ],
+      "sameAs": [
+        {{ site.linkedin | jsonld | safe }},
+        {{ site.github | jsonld | safe }},
+        {{ site.agency | jsonld | safe }}
+      ]
+    },
+    {
+      "@type": "WebSite",
+      "@id": {{ websiteId | jsonld | safe }},
+      "url": {{ site.url | jsonld | safe }},
+      "name": {{ (site.name + " — " + site.tagline) | jsonld | safe }},
+      "description": {{ site.summary | jsonld | safe }},
+      "inLanguage": "en-US",
+      "publisher": { "@id": {{ personId | jsonld | safe }} }
+    },
+    {
+      "@type": {% if isAbout %}"ProfilePage"{% elif ogType == "article" %}"Article"{% else %}"WebPage"{% endif %},
+      "@id": {{ (page.url | absoluteUrl(site.url)) | jsonld | safe }},
+      "url": {{ (page.url | absoluteUrl(site.url)) | jsonld | safe }},
+      "name": {{ title | jsonld | safe }},
+      "description": {{ description | jsonld | safe }},
+      "isPartOf": { "@id": {{ websiteId | jsonld | safe }} },
+      {% if ogType == "article" %}
+      "headline": {{ title | jsonld | safe }},
+      "datePublished": {{ (datePublished or "2026-01-01") | isoDate | jsonld | safe }},
+      "dateModified": {{ page.date | isoDate | jsonld | safe }},
+      "author": { "@id": {{ personId | jsonld | safe }} },
+      {% endif %}
+      "about": { "@id": {{ personId | jsonld | safe }} },
+      "breadcrumb": {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": {{ site.url | jsonld | safe }}
+          }
+          {%- if breadcrumbParent %},
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": {{ breadcrumbParent.label | jsonld | safe }},
+            "item": {{ (breadcrumbParent.url | absoluteUrl(site.url)) | jsonld | safe }}
+          }
+          {%- endif %}
+          {%- if not isHome %},
+          {
+            "@type": "ListItem",
+            "position": {% if breadcrumbParent %}3{% else %}2{% endif %},
+            "name": {{ title | jsonld | safe }},
+            "item": {{ (page.url | absoluteUrl(site.url)) | jsonld | safe }}
+          }
+          {%- endif %}
+        ]
+      }
+    }
+  ]
+}
+</script>

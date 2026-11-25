@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="{{ site.lang }}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+{%- set pageUrl = page.url | absoluteUrl(site.url) %}
+{#- shortTitle lets a long on-page <h1> coexist with a <= 60 char <title> -#}
+{%- set metaTitle = (shortTitle or title) + " | " + site.name %}
+{%- if isHome %}{% set metaTitle = site.name + " | " + site.tagline %}{% endif %}
+{%- set metaImage = (ogImage or site.ogImage) | absoluteUrl(site.url) %}
+
+<title>{{ metaTitle }}</title>
+<meta name="description" content="{{ description }}">
+<link rel="canonical" href="{{ pageUrl }}">
+{% if noindex %}<meta name="robots" content="noindex, follow">{% else %}<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">{% endif %}
+
+<meta name="author" content="{{ site.name }}">
+<meta property="og:type" content="{{ ogType or 'website' }}">
+<meta property="og:site_name" content="{{ site.name }}">
+<meta property="og:locale" content="{{ site.locale }}">
+<meta property="og:title" content="{{ metaTitle }}">
+<meta property="og:description" content="{{ description }}">
+<meta property="og:url" content="{{ pageUrl }}">
+<meta property="og:image" content="{{ metaImage }}">
+<meta property="og:image:alt" content="{{ ogImageAlt or (site.name + ' — ' + site.tagline) }}">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{{ metaTitle }}">
+<meta name="twitter:description" content="{{ description }}">
+<meta name="twitter:image" content="{{ metaImage }}">
+
+<meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<link rel="sitemap" href="/sitemap.xml" type="application/xml">
+
+<link rel="stylesheet" href="/assets/css/main.css">
+
+{% include "partials/schema.njk" %}
+</head>
+{#-
+  hx-boost intercepts same-origin link clicks and fetches the SAME complete
+  HTML document a crawler receives, then swaps only <main>. No fragment URLs
+  exist. With JS off, every link is a plain anchor. See /technical-notes/.
+-#}
+<body hx-boost="true" hx-target="#main" hx-select="#main" hx-swap="outerHTML">
+<a class="skip-link" href="#main">Skip to main content</a>
+
+{% include "partials/header.njk" %}
+
+<main id="main" tabindex="-1">
+{{ content | safe }}
+</main>
+
+{% include "partials/footer.njk" %}
+
+<div id="route-announcer" class="visually-hidden" role="status" aria-live="polite" aria-atomic="true"></div>
+
+<script src="/assets/js/htmx.min.js" defer></script>
+<script src="/assets/js/enhance.js" defer></script>
+</body>
+</html>

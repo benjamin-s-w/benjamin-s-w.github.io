@@ -1,0 +1,102 @@
+---
+title: "Building attribution that explains why performance changed"
+shortTitle: "Attribution That Explains Performance"
+slug: attribution-analytics
+order: 3
+discipline: Search Analytics & Attribution
+cardSummary: "Standardizing GTM and GA4 across client and corporate domains so organic work could be tied to calls, form fills, and booked appointments instead of sessions."
+headlineResult: "Calls, forms, bookings"
+headlineLabel: "tied back to organic"
+roleOnProject: "Analytics architecture and governance"
+context: "Client and corporate domains, Audigy, 2021–present"
+datePublished: 2026-01-25
+description: "Clean Google Tag Manager and GA4 architecture with first-party attribution, tying organic work to calls, form fills, and booked appointments."
+skills:
+  - Google Tag Manager
+  - GA4
+  - First-party attribution
+  - Looker Studio
+  - Google Search Console analysis
+  - Performance diagnosis
+---
+
+<h2>The problem with reporting on traffic</h2>
+
+<p>
+  Early in my SEO work I spent a lot of time writing emails to clients and
+  marketing managers explaining why a site was performing well even though the
+  owner had Googled themselves and not seen their practice. Those conversations
+  taught me something that shaped how I work: <strong>a report that cannot
+  explain why a number moved is not a report, it's a chart</strong>.
+</p>
+
+<p>
+  Ranking is a proxy. Sessions are a proxy. For a practice owner, the real
+  question is whether the phone rang and whether the appointment got booked.
+  If the measurement architecture can't connect organic work to those outcomes,
+  every strategic conversation becomes an argument about proxies.
+</p>
+
+<h2>What I built</h2>
+
+<h3>Standardized GTM architecture</h3>
+<p>
+  Tag containers across client and corporate domains had drifted into
+  inconsistency &mdash; different naming, duplicate tags, conflicting triggers,
+  and events that meant different things on different sites. I standardized the
+  container architecture so that an event name means the same thing everywhere.
+  This sounds like housekeeping. It is actually the precondition for any
+  cross-portfolio analysis being trustworthy.
+</p>
+
+<h3>GA4 conversion modeling around real outcomes</h3>
+<p>
+  Conversions were defined around the actions tied to revenue: tracked phone
+  calls, form submissions, and appointment bookings &mdash; not scroll depth or
+  time on page. Where a practice used a third-party booking or call-tracking
+  system, the integration had to be deliberate rather than assumed.
+</p>
+
+<h3>First-party attribution pipelines</h3>
+<p>
+  Third-party cookie decay and privacy changes have steadily degraded
+  off-the-shelf attribution. I've built first-party pipelines so the connection
+  between an organic session and a downstream outcome survives, rather than
+  being quietly reassigned to direct traffic.
+</p>
+
+<h3>Looker Studio reporting with integrated sources</h3>
+<p>
+  For clients on dedicated SEO plans I build custom dashboards that pull
+  multiple data sources into one view, so the conversation starts from a shared
+  picture rather than three disagreeing exports.
+</p>
+
+<h2>The diagnostic habit</h2>
+
+<p>
+  When organic performance changes, I work through a consistent sequence before
+  forming a hypothesis:
+</p>
+
+<ol>
+  <li>Is this a measurement change or a real change? Tag breakage and
+    reporting-side changes explain a surprising share of apparent cliffs.</li>
+  <li>Is it broad or concentrated? A portfolio-wide shift and a single-page
+    shift have entirely different causes.</li>
+  <li>Did the SERP change, or did we? Feature changes, new competitors, and
+    layout shifts move clicks without moving position.</li>
+  <li>Did position change, or did click-through? GSC separates these, and
+    conflating them sends you down the wrong remediation path.</li>
+  <li>Is the conversion rate stable? Traffic down with conversions flat is a
+    different problem than traffic flat with conversions down.</li>
+  <li>What changed on the site, and when? Deploy and content timelines are
+    usually the fastest route to the actual answer.</li>
+</ol>
+
+<p>
+  The point of the sequence is to arrive at a recommendation that is backed by
+  reasoning the client can follow. "Rankings dropped, we'll optimize" is not
+  actionable. "Impressions held, CTR fell on these twelve pages after a SERP
+  layout change, here's the title and schema response" is.
+</p>

@@ -1,0 +1,52 @@
+---
+layout: base.njk
+---
+
+<article>
+  <header class="page-head">
+    <div class="wrap wrap--narrow">
+      <nav class="breadcrumbs" aria-label="Breadcrumb">
+        <p class="page-head__eyebrow">
+          <a href="/case-studies/">Case Studies</a> &middot; {{ discipline }}
+        </p>
+      </nav>
+      <h1>{{ title }}</h1>
+      <p class="lede" style="margin-top:var(--space-m)">{{ cardSummary }}</p>
+    </div>
+  </header>
+
+  <div class="wrap wrap--narrow">
+    <ul class="metrics" style="margin-bottom:var(--space-xl)">
+      <li class="metric">
+        <p class="metric__value">{{ headlineResult }}</p>
+        <p class="metric__label">{{ headlineLabel }}</p>
+      </li>
+      <li class="metric">
+        <p class="metric__label">Role</p>
+        <p class="metric__detail">{{ roleOnProject }}</p>
+      </li>
+      <li class="metric">
+        <p class="metric__label">Context</p>
+        <p class="metric__detail">{{ context }}</p>
+      </li>
+    </ul>
+
+    <div class="prose">
+      {{ content | safe }}
+    </div>
+
+    {%- if skills %}
+    <h2 style="margin-top:var(--space-xl)">Skills applied</h2>
+    <ul class="tags" style="margin-top:var(--space-m)">
+      {%- for skill in skills %}
+      <li class="tag">{{ skill }}</li>
+      {%- endfor %}
+    </ul>
+    {%- endif %}
+
+    <div class="actions">
+      <a class="btn btn--ghost" href="/case-studies/">All case studies</a>
+      <a class="btn btn--primary" href="/contact/">Discuss this work</a>
+    </div>
+  </div>
+</article>

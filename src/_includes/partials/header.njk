@@ -1,0 +1,29 @@
+<header class="site-header">
+  <div class="wrap site-header__inner">
+    <a class="brand" href="/">
+      <span class="brand__name">{{ site.name }}</span>
+      <span class="brand__role">{{ site.tagline }}</span>
+    </a>
+
+    <nav class="nav" aria-label="Primary">
+      <ul class="nav__list">
+        {%- set navItems = [
+          { url: "/about/", label: "About" },
+          { url: "/capabilities/", label: "Capabilities" },
+          { url: "/case-studies/", label: "Case Studies" },
+          { url: "/approach/", label: "Approach" },
+          { url: "/ai-search/", label: "AI Search" },
+          { url: "/contact/", label: "Contact" }
+        ] %}
+        {%- for item in navItems %}
+        <li>
+          <a href="{{ item.url }}"
+             {% if page.url == item.url or (item.url != "/" and page.url.startsWith(item.url)) %}aria-current="page"{% endif %}>
+            {{ item.label }}
+          </a>
+        </li>
+        {%- endfor %}
+      </ul>
+    </nav>
+  </div>
+</header>

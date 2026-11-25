@@ -1,0 +1,22 @@
+---
+permalink: /robots.txt
+eleventyExcludeFromCollections: true
+---
+User-agent: *
+Allow: /
+
+# AI crawlers are welcome. This site exists to be read, including by
+# answer engines. See /ai-search/ for the reasoning.
+User-agent: GPTBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+Sitemap: {{ site.url }}/sitemap.xml

@@ -1,0 +1,211 @@
+---
+layout: base.njk
+title: Technical Notes
+description: "How this site is built and why: static-first htmx, Lighthouse budgets enforced in CI, structured data, and accessible boosted navigation."
+permalink: /technical-notes/
+sitemapPriority: 0.7
+---
+
+<section class="page-head">
+  <div class="wrap">
+    <p class="page-head__eyebrow">Technical Notes</p>
+    <h1>How this site is built, and why.</h1>
+    <p class="lede" style="margin-top:var(--space-m)">
+      An SEO portfolio should survive the audit it invites. Here's the reasoning
+      behind each decision, including the trade-offs.
+    </p>
+  </div>
+</section>
+
+<section class="section section--flush">
+  <div class="wrap">
+    <div class="prose">
+      <h2>The constraint I set myself</h2>
+
+      <p>
+        I wanted to use htmx, because I like it and because it suits a site this
+        size. The obvious problem: the common htmx pattern &mdash; request a
+        partial, inject it into a container &mdash; produces pages whose content
+        doesn't exist in the initial HTML response. On a site whose purpose is
+        demonstrating that I understand crawlability, that would be a
+        self-inflicted wound. Anyone evaluating me can press Ctrl+U.
+      </p>
+
+      <p>
+        So the constraint was: <strong>use htmx without ever producing a URL
+        that returns a fragment</strong>.
+      </p>
+
+      <h2>Static-first, enhanced second</h2>
+
+      <p>
+        Every page here is a complete, pre-rendered HTML document at a real URL,
+        generated at build time by Eleventy. There is no server-side rendering
+        at request time and no client-side routing.
+      </p>
+
+      <p>
+        htmx is layered on top as progressive enhancement using
+        <code>hx-boost</code> with <code>hx-select="#main"</code>. When you click
+        a link, htmx fetches <em>the same complete document a crawler receives</em>
+        and swaps only the <code>&lt;main&gt;</code> element. That produces three
+        properties I wanted:
+      </p>
+
+      <ul>
+        <li>
+          <strong>No fragment URLs exist.</strong> There is nothing extra to
+          crawl, canonicalize, or de-duplicate. The duplicate-content surface is
+          zero because there is only ever one representation of each page.
+        </li>
+        <li>
+          <strong>It works with JavaScript disabled.</strong> Every link is an
+          ordinary anchor with a real <code>href</code>. Turn JS off and the
+          site is fully functional, just without the soft navigation.
+        </li>
+        <li>
+          <strong>Crawlers get everything in the first response.</strong> No
+          rendering dependency, no JS execution required for content.
+        </li>
+      </ul>
+
+      <p>
+        The trade-off is honest: boosted navigation re-downloads the full
+        document rather than just the changed region. At this page weight
+        that's a non-issue, and I'd rather pay a few kilobytes than introduce a
+        crawlability question. On a large content site I'd reconsider.
+      </p>
+
+      <h2>The accessibility problem boosted navigation creates</h2>
+
+      <p>
+        This is the part most htmx implementations skip. When you swap content
+        without a real page load, screen readers are not told anything happened.
+        The user hears silence, and focus is left wherever it was &mdash; often
+        at the bottom of the previous page.
+      </p>
+
+      <p>Three fixes are implemented here:</p>
+
+      <ol>
+        <li>
+          A visually hidden <code>aria-live="polite"</code> region announces the
+          new page title after each swap.
+        </li>
+        <li>
+          Focus is moved programmatically to <code>&lt;main&gt;</code>, which
+          carries <code>tabindex="-1"</code> so it can receive focus without
+          entering the tab order.
+        </li>
+        <li>
+          The document <code>&lt;title&gt;</code>, meta description, canonical
+          link, and robots directive are parsed from the fetched response and
+          applied to the live document, so the tab, history entry, and any
+          JS-executing crawler all see correct metadata.
+        </li>
+      </ol>
+
+      <p>
+        There's also a failure path: if a boosted request errors, the script
+        falls back to a real browser navigation rather than stranding the user
+        on a stale page.
+      </p>
+
+      <h2>Performance decisions</h2>
+
+      <table>
+        <thead>
+          <tr><th>Decision</th><th>Reason</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>System font stack</td>
+            <td>Zero font requests, zero FOUT, no layout shift from font swap.</td>
+          </tr>
+          <tr>
+            <td>Single stylesheet, no framework</td>
+            <td>No unused CSS to ship or purge.</td>
+          </tr>
+          <tr>
+            <td>AVIF and WebP with JPEG fallback</td>
+            <td>The headshot is 15&nbsp;KB as AVIF versus 30&nbsp;KB as JPEG.</td>
+          </tr>
+          <tr>
+            <td>Explicit width and height on images</td>
+            <td>Reserves layout space, which protects CLS.</td>
+          </tr>
+          <tr>
+            <td><code>fetchpriority="high"</code> on the hero image</td>
+            <td>It is the LCP element on the pages where it appears.</td>
+          </tr>
+          <tr>
+            <td>Deferred JavaScript</td>
+            <td>Nothing blocks the initial render. Total JS is htmx plus a small enhancement script.</td>
+          </tr>
+          <tr>
+            <td>No analytics, no third-party scripts</td>
+            <td>Nothing to slow the page, and nothing to disclose about visitors.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2>SEO implementation</h2>
+
+      <ul>
+        <li>Unique title and meta description on every page, generated from front matter so they can't silently drift.</li>
+        <li>Self-referencing canonical on every page.</li>
+        <li>JSON-LD graph: <code>Person</code>, <code>WebSite</code>, <code>ProfilePage</code> on the about page, <code>Article</code> on case studies, and <code>BreadcrumbList</code> throughout.</li>
+        <li>Open Graph and Twitter card metadata with a generated 1200&times;630 image.</li>
+        <li><code>sitemap.xml</code> generated from the content collection, so a new page cannot be omitted by forgetting to update it.</li>
+        <li>Semantic landmarks, a single <code>h1</code> per page, and a logical heading hierarchy.</li>
+        <li>A skip link, visible focus indicators, and WCAG&nbsp;2.2&nbsp;AA contrast.</li>
+        <li>A <code>prefers-color-scheme</code> dark variant and <code>prefers-reduced-motion</code> handling.</li>
+      </ul>
+
+      <h2>CI, and why it's the interesting part</h2>
+
+      <p>
+        Claiming a site is well-optimized is weak evidence. Enforcing it
+        mechanically is stronger. Every pull request to this repository runs:
+      </p>
+
+      <ul>
+        <li><strong>html-validate</strong> &mdash; markup validity.</li>
+        <li><strong>Metadata uniqueness check</strong> &mdash; a script that fails the build if any page is missing a title, description, or canonical, or if any two pages share one.</li>
+        <li><strong>lychee</strong> &mdash; internal and external link checking.</li>
+        <li><strong>Lighthouse CI</strong> &mdash; with assertions requiring a perfect SEO score and a perfect accessibility score. The build fails if either regresses.</li>
+      </ul>
+
+      <p>
+        That last one is the point. The quality claim on this site isn't a claim;
+        it's a gate. I can't merge a change that breaks it without the pipeline
+        telling me.
+      </p>
+
+      <h2>Hosting</h2>
+
+      <p>
+        Static assets on Cloudflare, deployed from <code>main</code> on merge.
+        Security headers (HSTS, <code>X-Content-Type-Options</code>, a content
+        security policy) and cache rules are declared in the repository rather
+        than configured by hand in a dashboard, so the configuration is
+        reviewable and reproducible.
+      </p>
+
+      <h2>What I'd do differently at scale</h2>
+
+      <p>
+        For a site this size, the architecture above is close to optimal. If
+        this were a thousand-page content site I'd revisit the full-document
+        boost pattern, add incremental builds, and introduce a real image CDN
+        rather than build-time generation. I mention that because knowing when
+        an approach stops scaling is part of knowing the approach.
+      </p>
+    </div>
+
+    <div class="actions">
+      <a class="btn btn--ghost" href="{{ site.github }}" rel="noopener">Source on GitHub</a>
+      <a class="btn btn--primary" href="/contact/">Get in touch</a>
+    </div>
+  </div>
+</section>

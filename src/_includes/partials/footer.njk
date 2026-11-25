@@ -1,0 +1,34 @@
+<footer class="site-footer">
+  <div class="wrap site-footer__inner">
+    <div class="site-footer__block">
+      <p class="site-footer__name">{{ site.name }}</p>
+      <p class="muted">{{ site.jobTitle }} &middot; {{ site.location.city }}, {{ site.location.regionCode }}</p>
+    </div>
+
+    <nav class="site-footer__block" aria-label="Footer">
+      <h2 class="site-footer__heading">Site</h2>
+      <ul class="plain">
+        <li><a href="/about/">About</a></li>
+        <li><a href="/capabilities/">Capabilities</a></li>
+        <li><a href="/case-studies/">Case Studies</a></li>
+        <li><a href="/approach/">Approach</a></li>
+        <li><a href="/ai-search/">AI Search</a></li>
+        <li><a href="/technical-notes/">Technical Notes</a></li>
+      </ul>
+    </nav>
+
+    <div class="site-footer__block">
+      <h2 class="site-footer__heading">Connect</h2>
+      <ul class="plain">
+        <li><a href="mailto:{{ site.email }}">{{ site.email }}</a></li>
+        <li><a href="{{ site.linkedin }}" rel="noopener">LinkedIn</a></li>
+        <li><a href="{{ site.github }}" rel="noopener">GitHub</a></li>
+        <li><a href="{{ site.agency }}" rel="noopener">Woodruff Multimedia</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="wrap site-footer__legal">
+    <p class="muted">&copy; {{ site.buildYear }} {{ site.name }}. Built as a static site and deployed on Cloudflare. <a href="/technical-notes/">How this site is built</a>.</p>
+  </div>
+</footer>
