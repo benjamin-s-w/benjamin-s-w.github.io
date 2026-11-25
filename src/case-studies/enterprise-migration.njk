@@ -1,16 +1,16 @@
 ---
-title: "Protecting organic equity across a 110+ site migration"
-shortTitle: "110+ Site Migration Without Losing Rankings"
+title: "Protecting organic equity across a 25+ site migration"
+shortTitle: "25+ Site Migration Without Losing Rankings"
 slug: enterprise-migration
 order: 1
 discipline: Technical & Enterprise SEO
-cardSummary: "Leading SEO strategy, information architecture, and redirect mapping as a large multi-location client portfolio moves off legacy custom themes — supported by a custom Python and JavaScript toolkit built for the job."
-headlineResult: "110+"
+cardSummary: "Leading SEO strategy, information architecture, blog migration, and redirect mapping as multi-location clients move off legacy custom themes — supported by a custom Python and JavaScript toolkit built for the job."
+headlineResult: "25+"
 headlineLabel: "client sites migrated"
 roleOnProject: "SEO lead for migration strategy, IA, redirect governance, and migration tooling"
-context: "Multi-location healthcare portfolio, Audigy, 2025–present"
-datePublished: 2026-01-15
-description: "SEO strategy, information architecture, regex redirect mapping, and custom Python and JavaScript tooling for a 110+ site healthcare WordPress migration."
+context: "Multi-location healthcare portfolio, Audigy, Feb. 2026–present"
+datePublished: 2026-11-25
+description: "SEO strategy, information architecture, regex redirect mapping, and custom Python and JavaScript tooling for a 25+ site healthcare WordPress migration."
 skills:
   - Information architecture
   - Regex redirect mapping
@@ -18,6 +18,10 @@ skills:
   - Indexation control
   - Structured data
   - Core Web Vitals
+  - ACF content modeling
+  - Content QA
+  - Google Tag Manager
+  - Google Business Profile management
   - Python
   - WordPress REST API
   - WordPress plugin development
@@ -30,7 +34,7 @@ skills:
 <h2>The situation</h2>
 
 <p>
-  A portfolio of more than 110 client websites was running on legacy custom
+  A portfolio of more than 30 client websites was running on legacy custom
   WordPress themes. The themes were increasingly expensive to maintain, slow,
   and difficult to extend. The business decision to move everything onto a
   modern block-based framework was straightforward. The SEO risk was not.
@@ -49,8 +53,8 @@ skills:
 
 <ul>
   <li>
-    <strong>Scale with variation.</strong> 110+ sites sounds like one problem
-    solved 110 times. It is not. Each site had accumulated its own URL quirks,
+    <strong>Scale with variation.</strong> 25+ sites sounds like one problem
+    solved 30 times. It is not. Each site had accumulated its own URL quirks,
     orphaned pages, legacy campaign landing pages, and locally-added content
     that nobody had inventoried.
   </li>
@@ -111,6 +115,102 @@ skills:
   a change warranted intervention versus when it was normal post-migration
   volatility.
 </p>
+
+<h2>Standardizing the content model on the new theme</h2>
+
+<p>
+  The legacy custom themes encoded a lot of meaning in their templates. Location
+  data, hearing aid styles, provider bios, and the taxonomy archives that tied
+  them together were not just content &mdash; they were the structure search
+  engines had learned to read. Moving to a block theme meant rebuilding that
+  structure deliberately rather than letting it be flattened into generic pages.
+</p>
+
+<p>
+  Our web team developed a standard Advanced Custom Fields data model that
+  mirrored the old theme's structure across every site: consistent field groups
+  for the custom post types, consistent ACF-driven taxonomy archives, and a
+  consistent place for the local and healthcare attributes that feed structured
+  data. My role was to pressure-test it. I ran extensive QA across sites to
+  confirm nothing important was dropped in translation &mdash; that every field
+  the old templates rendered had a home in the new model, that the taxonomy
+  archives still existed as indexable pages with their own content, and that
+  LocalBusiness and healthcare-specific structured data was populated from
+  real field data rather than hard-coded or left empty.
+</p>
+
+<p>
+  I also QA'd, fixed, and improved the front-end view for each content type
+  &mdash; location pages, hearing aid style pages, provider pages, and the
+  archives above them. The Kadence theme's Elements feature was the right lever
+  here: rather than hand-building each entry, the layout for a content type is
+  defined once and applied to every entry in it, so the custom field data renders
+  consistently whether a client has three locations or thirty. That consistency
+  is what makes templated metadata, internal linking, and structured data
+  predictable at portfolio scale instead of something to re-verify entry by entry.
+</p>
+
+<h2>Protecting measurement during the move</h2>
+
+<p>
+  A migration can preserve rankings perfectly and still look like a failure if
+  the measurement layer breaks underneath it. Two threads of this project were
+  about defending that layer.
+</p>
+
+<p>
+  The first was an analytics incident. In an effort to improve load times, a lead
+  developer deleted significant portions of our clients' Google Tag Manager tags.
+  The performance intent was reasonable; the tracking cost was not. The deletions
+  broke tracking continuity, and most seriously they broke our cross-site
+  reporting roll-up tag &mdash; the one our digital marketing teams rely on to
+  watch overall client performance health trends across the portfolio. I worked
+  with the team to diagnose what had been removed, roll the containers back, and
+  restore the roll-up so the trend data stayed comparable across the migration
+  boundary. A gap in that series would have been effectively permanent, because
+  you cannot backfill tracking that never fired.
+</p>
+
+<p>
+  The second was ongoing local hygiene. Throughout the migration I regularly
+  verified that tracking phone numbers were still displaying correctly on client
+  Google Business Profiles, and ran audits whenever a traffic or lead decrease
+  showed up &mdash; separating real organic movement from a tracking artifact
+  before anyone escalated it as a ranking problem.
+</p>
+
+<h2>Outcomes</h2>
+
+<ul>
+  <li>
+    <strong>100% of custom copy maintained.</strong> Every piece of
+    locally-written content came across, verified rather than assumed.
+  </li>
+  <li>
+    <strong>No new broken links introduced.</strong> Redirect validation and the
+    diff checker caught breakage before launch rather than after.
+  </li>
+  <li>
+    <strong>Average traffic loss under 6%, recovered in 3 months.</strong> Well
+    inside the range a migration of this scope would normally risk.
+  </li>
+  <li>
+    <strong>Average conversion loss of 5%, recovered in 30 days &mdash; followed
+    by an average lift of 16%.</strong> The conversion recovery outran the
+    traffic recovery, which is what you want: the pages that drive calls and
+    appointments were prioritized.
+  </li>
+  <li>
+    <strong>Core Web Vitals loading scores up from roughly 30/100 to 70/100 on
+    average.</strong> A combination of the newer tech stack and standardized,
+    automated performance improvements applied the same way to every site.
+  </li>
+  <li>
+    <strong>Ahrefs site health scores up 20&ndash;50 points on average.</strong>
+    The technical debt that had accumulated in the legacy themes was cleared as
+    part of the move rather than carried forward.
+  </li>
+</ul>
 
 <h2>The tooling I built to make it possible</h2>
 
@@ -268,7 +368,7 @@ skills:
 
 <p>
   Yoast configuration is easy to get subtly wrong and tedious to verify across
-  110+ sites. I built a settings generator that produces a ready-to-paste Yoast
+  25+ sites. I built a settings generator that produces a ready-to-paste Yoast
   import file encoding our standard configuration &mdash; title and description
   patterns, and indexation rules that keep internal-only content types and
   taxonomies out of the XML sitemap and the index, such as attachments, design
