@@ -13,7 +13,11 @@ export default {
     "Technical SEO, local search, and analytics strategist with 8+ years turning complex multi-location healthcare websites into measurable organic acquisition channels.",
 
   // --- Canonical location ----------------------------------------------
-  url: "https://ben.woodruffmultimedia.com",
+  // GitHub Pages user site. Requires the repository to be named exactly
+  // "benjamin-s-w.github.io" so the site serves from the domain root.
+  // To move to a custom domain later: change this value, add a CNAME file
+  // to src/static/, and point a DNS CNAME at benjamin-s-w.github.io.
+  url: "https://benjamin-s-w.github.io",
   locale: "en_US",
   lang: "en",
 

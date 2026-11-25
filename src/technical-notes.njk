@@ -182,14 +182,38 @@ sitemapPriority: 0.7
         telling me.
       </p>
 
-      <h2>Hosting</h2>
+      <h2>Hosting, and an honest trade-off</h2>
 
       <p>
-        Static assets on Cloudflare, deployed from <code>main</code> on merge.
-        Security headers (HSTS, <code>X-Content-Type-Options</code>, a content
-        security policy) and cache rules are declared in the repository rather
-        than configured by hand in a dashboard, so the configuration is
-        reviewable and reproducible.
+        The site is hosted on GitHub Pages and deployed from <code>main</code>
+        by GitHub Actions. Nothing is uploaded by hand; the artifact that passes
+        the gates above is the artifact that ships.
+      </p>
+
+      <p>
+        I originally built this for Cloudflare Workers so I could declare
+        security headers &mdash; HSTS, a content security policy,
+        <code>X-Content-Type-Options</code> &mdash; in version control. Then I
+        checked the DNS and found that attaching a Worker to a custom domain
+        requires moving the whole domain's nameservers to Cloudflare. That meant
+        migrating a live site's MX and SPF records to host a portfolio. The
+        risk was disproportionate to the benefit, so I changed course.
+      </p>
+
+      <p>
+        GitHub Pages cannot set custom response headers, so that capability is
+        genuinely gone. What remains is a <code>referrer</code> meta tag and the
+        structural reasons the headers mattered less here than they would
+        elsewhere: no forms, no authentication, no cookies, no user input, and
+        no third-party scripts. A content security policy mitigates injection;
+        this site has no injection surface. HSTS protects credentials in
+        transit; there are no credentials.
+      </p>
+
+      <p>
+        I'm documenting the trade-off rather than quietly dropping the claim,
+        because deciding which best practice to spend risk on is most of the
+        job. If this site handled user input, I'd have made the opposite call.
       </p>
 
       <h2>What I'd do differently at scale</h2>

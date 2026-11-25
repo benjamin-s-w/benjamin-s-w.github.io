@@ -1,9 +1,9 @@
-# ben.woodruffmultimedia.com
+# benjamin-s-w.github.io
 
 SEO portfolio for Ben Woodruff — Search Engine Optimization Specialist.
 
 Static site built with [Eleventy](https://www.11ty.dev/), progressively enhanced
-with [htmx](https://htmx.org/), deployed to Cloudflare Workers Static Assets.
+with [htmx](https://htmx.org/), deployed to GitHub Pages by GitHub Actions.
 
 ---
 
@@ -61,8 +61,10 @@ npm run dev        # local server at :8080 with live reload
 npm run build      # build to dist/
 npm run validate   # html-validate + metadata checks
 npm run lhci       # Lighthouse CI with assertions
-npm run deploy     # wrangler deploy (requires Cloudflare auth)
+npm run resume     # regenerate src/static/resume.pdf from tools/resume.html
 ```
+
+Deployment is push-to-`main`; there is no local deploy command.
 
 ### Regenerating images
 
@@ -93,16 +95,35 @@ CI on Linux is unaffected.
 
 ## Deployment
 
-`main` → production via `.github/workflows/deploy.yml`.
+`main` → GitHub Pages via `.github/workflows/deploy.yml`. **No secrets required** —
+it uses OIDC. The workflow builds, runs the validation gates, and refuses to
+publish a build that fails them.
 
-Required repository secrets:
+One-time setup: repository **Settings → Pages → Source → GitHub Actions**.
 
-- `CLOUDFLARE_API_TOKEN` — scoped to Workers Scripts: Edit
-- `CLOUDFLARE_ACCOUNT_ID`
+The repository must be named exactly `benjamin-s-w.github.io` for the site to
+serve from the domain root. A differently-named repo publishes to
+`benjamin-s-w.github.io/<repo>/`, which would break every absolute URL in
+`sitemap.xml` and the canonicals.
 
-Security headers and cache rules are declared in `src/static/_headers` so the
-configuration is reviewable in version control rather than set by hand in a
-dashboard.
+### Why not Cloudflare
+
+This was originally built for Cloudflare Workers so security headers could be
+declared in version control. Attaching a Worker to a custom domain requires the
+domain's nameservers to be on Cloudflare — `woodruffmultimedia.com` is on
+SiteGround, so that meant migrating a live site's MX and SPF records to host a
+portfolio. Disproportionate risk, so GitHub Pages it is.
+
+GitHub Pages cannot set custom response headers, so HSTS, CSP, and
+`X-Content-Type-Options` are not available. Only `referrer` survives, as a meta
+tag. The trade-off is documented on `/technical-notes/` rather than hidden.
+
+### Moving to a custom domain later
+
+1. Change `url` in `src/_data/site.js`
+2. Add `src/static/CNAME` containing the hostname
+3. Add a DNS `CNAME` record pointing at `benjamin-s-w.github.io`
+4. Enable **Enforce HTTPS** in repository settings
 
 ---
 

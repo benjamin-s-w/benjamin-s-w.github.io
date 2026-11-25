@@ -7,18 +7,18 @@ on:
 
 permissions:
   contents: read
+  pages: write
+  id-token: write
 
+# One production deploy at a time; never cancel a run mid-publish.
 concurrency:
-  group: deploy-production
+  group: pages
   cancel-in-progress: false
 
 jobs:
-  deploy:
-    name: Deploy to Cloudflare
+  build:
+    name: Build and validate
     runs-on: ubuntu-latest
-    environment:
-      name: production
-      url: https://ben.woodruffmultimedia.com
 
     steps:
       - name: Check out
@@ -36,12 +36,27 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Validate before deploying
+      - name: Validate before publishing
         # Never publish a build that would fail the quality gates.
         run: npm run validate
 
-      - name: Deploy with Wrangler
-        uses: cloudflare/wrangler-action@v3
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
         with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          path: dist
+
+  deploy:
+    name: Deploy to GitHub Pages
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v4

@@ -15,8 +15,7 @@
     "validate": "npm run validate:html && npm run validate:meta",
     "test": "npm run build && npm run validate",
     "lhci": "lhci autorun",
-    "resume": "node tools/build-resume.js",
-    "deploy": "wrangler deploy"
+    "resume": "node tools/build-resume.js"
   },
   "devDependencies": {
     "@11ty/eleventy": "^3.0.0",

@@ -29,6 +29,13 @@
 <meta name="twitter:description" content="{{ description }}">
 <meta name="twitter:image" content="{{ metaImage }}">
 
+{#-
+  GitHub Pages cannot set custom response headers, so the HSTS/CSP/nosniff
+  headers this project originally shipped are not available. referrer is one
+  of the few directives that is honoured as a meta tag. See /technical-notes/.
+-#}
+<meta name="referrer" content="strict-origin-when-cross-origin">
+
 <meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)">
 <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
 
