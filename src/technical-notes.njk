@@ -100,7 +100,7 @@ sitemapPriority: 0.7
       <h2>The accessibility bug I removed by deleting code</h2>
 
       <p>
-        This site previously used a JavaScript library to swap page content
+        This site could've easily used a JavaScript library to swap page content
         without a full navigation. That approach works, but it silently breaks
         things the browser otherwise gets right: screen readers are not told the
         page changed, and focus is left wherever it was &mdash; often at the
@@ -108,7 +108,7 @@ sitemapPriority: 0.7
       </p>
 
       <p>
-        Repairing that took a hand-written script: an
+        Repairing that took more tooling or a hand-written script: an
         <code>aria-live</code> region to announce each new page title, code to
         move focus to <code>&lt;main&gt;</code>, code to reset scroll position,
         logic to parse the incoming response and sync the
@@ -117,10 +117,10 @@ sitemapPriority: 0.7
       </p>
 
       <p>
-        That is roughly 120 lines of code whose entire purpose was to make a
+        That is roughly 120 lines of code whose entire purpose is to make a
         simulated navigation behave like a real one &mdash; plus a second,
-        untested copy of metadata logic that already existed in the template,
-        free to drift out of sync. Deleting the library deleted the bug class
+        untested copy of metadata logic that already exists in the template,
+        free to drift out of sync. Avoiding a  library deleted the bug class
         along with it. <strong>The most reliable accessibility fix available
         here was removing the thing that required the fix.</strong>
       </p>
@@ -128,9 +128,7 @@ sitemapPriority: 0.7
       <h2>Why there is no framework here</h2>
 
       <p>
-        I measured rather than assumed. The library and its repair script came
-        to roughly 55&nbsp;KB uncompressed. The entire site &mdash; fifteen
-        pages of HTML &mdash; averages about 15&nbsp;KB per page.
+        I measured rather than assumed. A library I could've used and the repair script came to roughly 55&nbsp;KB uncompressed. The entire site &mdash; fifteen pages of HTML &mdash; averages about 15&nbsp;KB per page.
       </p>
 
       <p>
@@ -143,16 +141,14 @@ sitemapPriority: 0.7
       </p>
 
       <p>
-        Removing it was not a downgrade. It was faster navigation, better
-        accessibility, and less code. I am documenting the reversal rather than
-        quietly rewriting history, because recognising when a tool you like is
-        not earning its weight is the part of this job that actually matters.
+        Avoiding it was not a downgrade. It was faster navigation, better
+        accessibility, and less code.
       </p>
 
       <h2>The accessibility work that remains</h2>
 
       <p>
-        Deleting the navigation layer removed the hardest accessibility problem
+        Avoiding the navigation layer prevents the hardest accessibility problem
         on this site, but not the responsibility. What remains is deliberate:
       </p>
 
